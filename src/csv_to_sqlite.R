@@ -24,9 +24,23 @@ dbListTables(mydb)
 dbGetQuery(mydb, 'SELECT * FROM tags LIMIT 5')
 
 # tag file from david's client
-sg_db = dbConnect(SQLite(), here('data', 'tagfile_project_427_2024-05-07-09-00-57.sqlite'))
+sg_db = dbConnect(SQLite(), './data/tagfile_project_427_2024-05-07-09-00-57.sqlite')
+dbListTables(sg_db)
+sgtbl_tags <- tbl(sg_db, "tags")
 
 
+sg_tags <- sgtbl_tags %>%
+  # rename(proj = projectID,
+  #        id = tagID,
+  #        tagFreq = nomFreq,
+  #        dfreq = offsetFreq,
+  #        codeset = codeSet) %>%
+  # mutate(fcdFreq = tagFreq + dfreq) %>%
+  # select(proj, id, tagFreq, bi, codeset, fcdFreq) %>%
+  distinct() %>% 
+  # arrange(id) %>%
+  collect() %>% 
+  as.data.frame()
 
 
 
@@ -45,14 +59,18 @@ metadata(sql_motus)
 # retrieve the virtual alltags table from our sql_motus SQLite file
 tbl_tags <- tbl(sql_motus, "tags")
 
-# converting tags table to R data frame
+# converting tags table to R data frame - needs column dfreq
+# dfreq = dfreq + (-1000*(tagFreq-fcdFreq))
+# example fron SG tag database
+
 df_tags <- tbl_tags %>%
   rename(proj = projectID,
          id = tagID,
          tagFreq = nomFreq,
          dfreq = offsetFreq,
          codeset = codeSet) %>%
-  select(proj, id, tagFreq, offset, bi, codeset) %>%
+  mutate(fcdFreq = 166.376) %>%
+  select(proj, id, tagFreq, dfreq, bi, codeset, fcdFreq) %>%
   distinct() %>% 
   arrange(id) %>%
   collect() %>% 
@@ -73,9 +91,10 @@ motus_db <- dbConnect(SQLite(), './data/motus_database.sqlite')
 # write csv data to sqlite database, table needs to be named 'tags' to be uploaded to SensorGnome
 dbWriteTable(motus_db, "tags", motus_tags, overwrite = TRUE)
 
+# list tables in database
 dbListTables(motus_db)
 
 # print first 5 rows of database
-dbGetQuery(motus_db, 'SELECT * FROM tags LIMIT 5')
+dbGetQuery(motus_db, 'SELECT * FROM tags')
 
 ### THIS CAN UPLOAD TO THE SENSORGNOME!!! double check the variables though
