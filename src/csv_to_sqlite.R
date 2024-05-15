@@ -11,7 +11,11 @@ library(rnaturalearth)
 # Convert CSV to SQLite ----------------------------------------------------------------
 
 # upload csv of tag data
-sg_tags = read.csv('./data/fake_sql_database2.csv', header = TRUE)
+# necessary column headers: proj, id, tagFreq, fcdFreq(166.376), offsetFreq, codeset
+# dfreq is calculated by SensorGnome with following equation:
+# # dfreq = offsetFreq + (-1000*(tagFreq-fcdFreq))
+
+sg_tags = read.csv('./data/sg_database.csv', header = TRUE)
 
 # create sql database/connection
 sg_db <- dbConnect(SQLite(), './data/sg_database.sqlite')
@@ -25,5 +29,6 @@ dbListTables(sg_db)
 # print first 5 rows of database
 dbGetQuery(sg_db, 'SELECT * FROM tags')
 
+# disconnect database
 dbDisconnect(sg_db)
 

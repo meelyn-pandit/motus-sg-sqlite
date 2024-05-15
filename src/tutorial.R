@@ -60,13 +60,13 @@ library(DBI)
 library(RSQLite)
 
 # specify the filepath where your .motus file is saved, and the file name.
-file.name <- dbConnect(SQLite(), "./data/project-176.motus") 
+file.name <- dbConnect(SQLite(), "./data/SG-2814BBBK1186.motus") 
 
 # get a list of tables in the .motus file specified above.
 dbListTables(file.name) 
 
 # get a list of variables in the "species" table in the .motus file.
-dbListFields(file.name, "species") 
+dbListFields(file.name, "tags") 
 
 # retrieve the virtual alltags table from our sql_motus SQLite file
 tbl.alltags <- tbl(sql_motus, "alltags")
