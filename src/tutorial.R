@@ -165,10 +165,3 @@ metadata(sql_motus, projectIDs = 176)
 
 # access tag and receiver metadata associated with projects 176 and 1
 metadata(sql_motus, projectIDs = c(176, 1))
-
-
-library(tidyverse)
-library(DBI)
-library(RSQLite)
-library(here)
-library(vroom)

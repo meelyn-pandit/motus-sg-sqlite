@@ -16,6 +16,7 @@ library(rnaturalearth)
 # # dfreq = offsetFreq + (-1000*(tagFreq-fcdFreq))
 
 sg_tags = read.csv('./data/sg_database.csv', header = TRUE)
+sg_tags = sg_tags[1:10,]
 
 # create sql database/connection
 sg_db <- dbConnect(SQLite(), './data/sg_database.sqlite')
